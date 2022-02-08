@@ -100,8 +100,8 @@ def load_sentiment_analysis_ui():
             focus_area_from_static      = identify_focus_areas(clean_text_list)
             focus_area_from_noun_chunks = get_noun_chunks(clean_text_str)
             
-            st.info('Focus Area')
-            st.write(focus_area_from_noun_chunks + focus_area_from_static)
+            # st.info('Focus Area')
+            # st.write(focus_area_from_noun_chunks + focus_area_from_static)
             
         with col2 :
             
