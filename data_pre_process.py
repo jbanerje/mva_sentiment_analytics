@@ -1,15 +1,10 @@
 # Core packages
 import string
 import re
-
-# NLP Packages
-from nltk.tokenize import word_tokenize
-
-from nltk.corpus import stopwords
-stopwords_english = stopwords.words('english')
-
-from nltk.stem import WordNetLemmatizer
-lemmatizer = WordNetLemmatizer()
+# Spacy Packages
+import spacy
+nlp = spacy.load('en_core_web_sm')
+stopwords = nlp.Defaults.stop_words
 
 class DataPreProcess:
     
@@ -17,9 +12,8 @@ class DataPreProcess:
         self.text = text
         
     def perform_data_pre_processing(self):
-        '''Make text lowercase, remove text in square brackets, remove punctuation and remove words containing numbers.'''
         
-        word_list_clean = []
+        '''Make text lowercase, remove text in square brackets, remove punctuation and remove words containing numbers.'''
         
         text = self.text.lower()
         text = re.sub('\[.*?\]', '', text)
@@ -27,14 +21,10 @@ class DataPreProcess:
         text = re.sub('\w*\d\w*', '', text)
         text = re.sub('[‘’“”…]', '', text)
         text = re.sub('\n', '', text)
+        text = text.translate(str.maketrans('', '', string.punctuation)) # Remove Punctuation
         
-        text = lemmatizer.lemmatize(text) # Lemmatize (Root Words)
+        doc = nlp(text)
         
-        text_list = text.split()
-        
-        for word in text_list:
-            if (word not in stopwords_english and  # remove stopwords
-                    word not in string.punctuation):  # remove punctuation
-                    word_list_clean.append(word)
+        word_list_clean = [word.lemma_ for word in doc if word not in stopwords]
                 
         return word_list_clean
