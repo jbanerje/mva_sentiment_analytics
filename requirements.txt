@@ -1,0 +1,9 @@
+vaderSentiment==3.3.2
+text2emotion==0.0.5
+pandas==1.4.0
+numpy==1.22.2
+matplotlib==3.5.1
+nltk==3.6.7
+streamlit==1.5.0
+spacy==3.2.1
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0/en_core_web_sm-3.0.0-py3-none-any.whl

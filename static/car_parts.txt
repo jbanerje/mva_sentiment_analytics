@@ -1,0 +1,40 @@
+alternator
+a/c
+ac
+air conditioner
+battery
+brakes
+bumper
+trip meter
+catalytic converter
+coolant
+engine
+engine
+front axle
+fuel gauge
+fuel tank
+gear
+headlights
+heater
+hood
+key
+license plate
+muffler
+radiator
+rear axle
+rear suspension
+rev counter
+seat belt
+speedometer
+steering wheel
+suspension
+tail lights
+tailpipe
+temperature gauge
+tire
+transmission
+trunk
+turn signal
+wheel
+windscreen
+windshield wipers
