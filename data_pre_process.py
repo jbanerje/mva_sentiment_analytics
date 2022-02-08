@@ -4,6 +4,7 @@ import re
 # Spacy Packages
 import spacy
 nlp = spacy.load('en_core_web_sm')
+lemmatizer = nlp.get_pipe("lemmatizer")
 stopwords = nlp.Defaults.stop_words
 
 class DataPreProcess:
@@ -23,8 +24,14 @@ class DataPreProcess:
         text = re.sub('\n', '', text)
         text = text.translate(str.maketrans('', '', string.punctuation)) # Remove Punctuation
         
-        doc = nlp(text)
+        word_list = text.split()
         
-        word_list_clean = [word.lemma_ for word in doc if word not in stopwords]
-                
-        return word_list_clean
+        # Word List after removing stop words
+        word_list_clean = [word for word in word_list if word not in stopwords]
+        
+        # Lemmatize the list
+        sentence_after_cleaning = ' '.join(word_list_clean)
+        doc = nlp(sentence_after_cleaning)
+        word_list_lemmatized = [token.lemma_ for token in doc]
+        
+        return list(set(word_list_lemmatized))

@@ -18,46 +18,39 @@ def identify_focus_areas(pre_processed_text):
     else:
         return ''
 
-def read_neg_pos_word_dict(polarity_info, pre_processed_text):
+def read_neg_word_dict(pre_processed_text):
     
-    ''' This file read the negative & postive word from files '''
+    ''' Negative Polarity '''        
     
-    neg_feedback_words = []
-    pos_feedback_words = []
+    file_neg_lex = open("./static/negative-words.txt", "r")
+    neg_lex_list = file_neg_lex.read().split()
         
-    if polarity_info == 'Negative':
+    neg_feedback_words = [neg_word for neg_word in pre_processed_text if neg_word in neg_lex_list]
         
-        file_neg_lex = open("./static/negative-words.txt", "r")
-        neg_lex_list = file_neg_lex.read().split()
-        
-        for neg_word in pre_processed_text:
-            if neg_word in neg_lex_list:
-                neg_feedback_words.append(neg_word)
-        
-        if len(neg_feedback_words) > 0 :
-            return list(set(neg_feedback_words))
-        else:
-            return 'Could not find any matching words'
-    
+    if len(neg_feedback_words) > 0 :
+        return list(set(neg_feedback_words))
     else:
-        
-        file_pos_lex = open("./static/positive-words.txt", "r")
-        pos_lex_list = file_pos_lex.read().split()
+        return 'Could not find any matching words'
 
-        for pos_word in pre_processed_text :
-            if pos_word in pos_lex_list:
-                pos_feedback_words.append(pos_word)
+def read_pos_word_dict(pre_processed_text):
+    
+    ''' Positive Polarity '''        
+    
+    file_neg_lex = open("./static/positive-words.txt", "r")
+    pos_lex_list = file_neg_lex.read().split()
         
-        if len(pos_feedback_words) > 0 :
-            return list(set(pos_feedback_words))
-        else:
-            return 'Could not find any matching words'
+    pos_feedback_words = [pos_word for pos_word in pre_processed_text if pos_word in pos_lex_list]
+        
+    if len(pos_feedback_words) > 0 :
+        return list(set(pos_feedback_words))
+    else:
+        return 'Could not find any matching words'
 
 def pos_tagging(text):
     
     ''' Function Returs Proper Noun, Numbers and Nounns '''
     doc = nlp(text)
-    pos_keywords = list(set([token.text for token in doc if (token.pos_ == 'PROPN')]))
+    pos_keywords = list(set([token.text for token in doc if token.pos_ in ['PROPN', 'SYM', 'NUM']]))
     return pos_keywords
 
 

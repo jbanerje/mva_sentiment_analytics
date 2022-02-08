@@ -61,7 +61,7 @@ def load_sentiment_analysis_ui():
         submit_text         = st.form_submit_button(label='Submit')
         
     if submit_text:
-        
+                
         # Build 2 sections in the UI
         col1,col2  = st.columns(2)
         
@@ -82,18 +82,13 @@ def load_sentiment_analysis_ui():
             polarity_info       = sentiment_polarity.get_sentiment_polarity()
             polarity_df         = sentiment_polarity.get_sentiment_data()
             
-            if  polarity_info   == 'Positive':           
-                st.success(f'Sentiment - {polarity_info}')
-                word_list = read_neg_pos_word_dict(polarity_info, clean_text_list)
-                
-            elif polarity_info  == 'Negative':
-                st.error(f'Sentiment - {polarity_info}')
-                word_list = read_neg_pos_word_dict(polarity_info, clean_text_list)
-                
+            st.info(f'Sentiment - {polarity_info}')
+            
+            if polarity_info  == 'Negative':
+                polarity_word_list = read_neg_word_dict(clean_text_list)
             else:
-                st.info(f'Sentiment - {polarity_info}')
-                word_list       = read_neg_pos_word_dict(polarity_info, clean_text_list)
-                
+                polarity_word_list = read_pos_word_dict(clean_text_list)
+                    
             st.pyplot(sentiment_pie_chart(list(polarity_df['Score']), list(polarity_df['Sentiment'].unique())))
             
             # Code Block For Entity Information
@@ -104,10 +99,9 @@ def load_sentiment_analysis_ui():
             # Code Block For Focus Area
             focus_area_from_static      = identify_focus_areas(clean_text_list)
             focus_area_from_noun_chunks = get_noun_chunks(clean_text_str)
-            focus_area_from_noun_chunks.append(focus_area_from_static)
             
             st.info('Focus Area')
-            st.write(focus_area_from_noun_chunks)
+            st.write(focus_area_from_noun_chunks + focus_area_from_static)
             
         with col2 :
             
@@ -118,7 +112,7 @@ def load_sentiment_analysis_ui():
             
             # Code Block For Customer Feedback
             st.info('Customer Feedback')
-            st.write(word_list)
+            st.write(polarity_word_list)
             
         
 if __name__ == "__main__":
