@@ -49,9 +49,41 @@ def read_pos_word_dict(pre_processed_text):
 def pos_tagging(text):
     
     ''' Function Returs Proper Noun, Numbers and Nounns '''
-    doc = nlp(text)
-    pos_keywords = list(set([token.text for token in doc if token.pos_ in ['PROPN', 'SYM', 'NUM']]))
-    return pos_keywords
+    
+    entity_identification = []
+    
+    cars_file = open("./static/porsche_cars.txt", "r")
+    cars_file_list = cars_file.read().lower().split()
+    
+    doc = nlp(text.lower())
+    
+    pos_numbers  = list(set([token.text for token in doc if token.pos_ in ['NUM']]))
+    pos_keywords = list(set([token.text for token in doc if token.pos_ in ['PROPN', 'NOUN']]))
+    
+    # Extracting the Year
+    for numbers in pos_numbers:
+        try:
+            if ( int(numbers) >=  1990) and ( int(numbers) <= 2050 ):
+                entity_identification.append(numbers)
+            if (numbers in cars_file_list) and (int(numbers) > 900):
+                entity_identification.append(numbers)
+                
+        except Exception as e:
+            pass
+               
+    # Extracting the Model
+    for items in pos_keywords:
+        if items in cars_file_list:
+            entity_identification.append(items)
+                    
+    # # Review Log
+    # file1 = open("review_log.txt","w")
+    # for token in doc :
+    #     reqd_str = token.text + '~' + token.pos_ + '\n'
+    #     file1.write(reqd_str)
+    # file1.close()
+    
+    return entity_identification
 
 
 def get_noun_chunks(text):
@@ -59,4 +91,12 @@ def get_noun_chunks(text):
     ''' Funcxtion Returns Noun Chunks '''
     
     doc = nlp(text)
+    
+    # Review Log
+    # file1 = open("noun_chunks.txt","w")
+    # for chunk in doc.noun_chunks:
+    #     reqd_str = token.text + '~' + token.pos_ + '\n'
+    #     file1.write(reqd_str)
+    # file1.close()
+    
     return [chunk.text for chunk in doc.noun_chunks]

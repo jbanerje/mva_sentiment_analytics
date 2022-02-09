@@ -8,6 +8,7 @@ bumper
 trip meter
 catalytic converter
 coolant
+charger
 engine
 engine
 front axle
@@ -30,6 +31,7 @@ steering wheel
 suspension
 tail lights
 tailpipe
+tailgate
 temperature gauge
 tire
 transmission

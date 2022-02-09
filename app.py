@@ -1,6 +1,6 @@
 # Core Pkgs
 import streamlit as st
-
+import markdown
 
 # EDA Pkgs
 import pandas as pd 
@@ -93,16 +93,27 @@ def load_sentiment_analysis_ui():
             
             # Code Block For Entity Information
             entity_information  = pos_tagging(raw_text)
+            entity_information = [entity.capitalize() for entity in entity_information]
+            
             st.info('Entity Information')
-            st.write(entity_information)
+            
+            if len(entity_information) > 0 :
+                entity_information_str = ' '.join(entity_information)
+                st.markdown(f""" #### {entity_information_str}""")
+            else:
+                st.markdown(f""" Not Available """)
             
             # Code Block For Focus Area
             focus_area_from_static      = identify_focus_areas(clean_text_list)
-            focus_area_from_noun_chunks = get_noun_chunks(clean_text_str)
             
-            # st.info('Focus Area')
-            # st.write(focus_area_from_noun_chunks + focus_area_from_static)
+            st.info('Focus Area')
             
+            if len(focus_area_from_static) > 0 :
+                for focus_word in focus_area_from_static:
+                    st.markdown(f""" - {focus_word.capitalize()}""")
+            else:
+                st.markdown(f""" Not Available """)
+                
         with col2 :
             
             # Code Block For Entity information
@@ -112,8 +123,22 @@ def load_sentiment_analysis_ui():
             
             # Code Block For Customer Feedback
             st.info('Customer Feedback')
-            st.write(polarity_word_list)
             
+            if len(polarity_word_list) > 0 :
+                for pol_word in polarity_word_list:
+                    st.markdown(f""" - {pol_word.capitalize()}""")
+            else:
+                st.markdown(f""" Not Available """)
+            
+            # Code Block for Aditional references
+            focus_area_from_noun_chunks = get_noun_chunks(clean_text_str)
+            st.info('Additional Tags')
+            
+            if len(focus_area_from_noun_chunks) > 0 :
+                for addtnl_tag in focus_area_from_noun_chunks:
+                    st.markdown(f""" - {addtnl_tag.capitalize()}""")
+            else:
+                st.markdown(f""" Not Available """)
         
 if __name__ == "__main__":
     load_sentiment_analysis_ui()
