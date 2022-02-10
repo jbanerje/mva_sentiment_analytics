@@ -1,5 +1,7 @@
 import spacy
 nlp = spacy.load("en_core_web_sm")
+from spacy_streamlit import visualize_ner, visualize_tokens, visualize_textcat
+# https://github.com/explosion/spacy-streamlit
 
 def identify_focus_areas(pre_processed_text):
     
@@ -56,6 +58,7 @@ def pos_tagging(text):
     cars_file_list = cars_file.read().lower().split()
     
     doc = nlp(text.lower())
+    #visualize_tokens(doc, attrs=["text", "pos_", "dep_", "ent_type_"])
     
     pos_numbers  = list(set([token.text for token in doc if token.pos_ in ['NUM']]))
     pos_keywords = list(set([token.text for token in doc if token.pos_ in ['PROPN', 'NOUN']]))
@@ -76,12 +79,7 @@ def pos_tagging(text):
         if items in cars_file_list:
             entity_identification.append(items)
                     
-    # # Review Log
-    # file1 = open("review_log.txt","w")
-    # for token in doc :
-    #     reqd_str = token.text + '~' + token.pos_ + '\n'
-    #     file1.write(reqd_str)
-    # file1.close()
+
     
     return entity_identification
 
@@ -92,11 +90,17 @@ def get_noun_chunks(text):
     
     doc = nlp(text)
     
-    # Review Log
-    # file1 = open("noun_chunks.txt","w")
-    # for chunk in doc.noun_chunks:
-    #     reqd_str = token.text + '~' + token.pos_ + '\n'
-    #     file1.write(reqd_str)
-    # file1.close()
-    
     return [chunk.text for chunk in doc.noun_chunks]
+
+def display_name_entity_viz(text):
+    doc = nlp(text)
+    # print(nlp.get_pipe("ner").labels)
+    # visualize_ner(doc, labels=nlp.get_pipe("ner").labels)
+    visualize_ner(
+                doc, 
+                labels=['PERSON', 'DATE', 'GPE', 'ORG', 'EVENT', 'FAC', 'LOC', 'PRODUCT'], 
+                show_table=False,
+                title="Keyword Vizualization"
+            )
+    
+    return
