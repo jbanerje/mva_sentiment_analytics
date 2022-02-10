@@ -1,6 +1,5 @@
 # Core Pkgs
 import streamlit as st
-import markdown
 
 # EDA Pkgs
 import pandas as pd 
@@ -128,7 +127,7 @@ def load_sentiment_analysis_ui():
                 for pol_word in polarity_word_list:
                     st.markdown(f""" - {pol_word.capitalize()}""")
             else:
-                st.markdown(f""" Not Available """)
+                st.write(f""" Not Available """)
             
             # Code Block for Aditional references
             focus_area_from_noun_chunks = get_noun_chunks(clean_text_str)

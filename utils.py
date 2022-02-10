@@ -30,7 +30,7 @@ def read_neg_word_dict(pre_processed_text):
     if len(neg_feedback_words) > 0 :
         return list(set(neg_feedback_words))
     else:
-        return 'Could not find any matching words'
+        return []
 
 def read_pos_word_dict(pre_processed_text):
     
@@ -44,7 +44,7 @@ def read_pos_word_dict(pre_processed_text):
     if len(pos_feedback_words) > 0 :
         return list(set(pos_feedback_words))
     else:
-        return 'Could not find any matching words'
+        return []
 
 def pos_tagging(text):
     
