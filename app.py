@@ -107,16 +107,6 @@ def load_sentiment_analysis_ui():
                 labels, sizes = extract_key_values_from_dict(emotions_info.extract_emotions())
                 st.info('Emotions')
                 st.pyplot(sentiment_pie_chart(sizes, labels))
-
-            # # Code Block for Aditional references
-            # focus_area_from_noun_chunks = get_noun_chunks(clean_text_str)
-            # st.info('Additional Tags')
-            
-            # if len(focus_area_from_noun_chunks) > 0 :
-            #     for addtnl_tag in focus_area_from_noun_chunks:
-            #         st.markdown(f""" - {addtnl_tag.capitalize()}""")
-            # else:
-            #     st.markdown(f""" Not Available """)
             
             with st.container():
                 
@@ -160,8 +150,17 @@ def load_sentiment_analysis_ui():
                             st.markdown(f""" * ###### {pol_word.capitalize()}""")
                     else:
                         st.write(f""" Not Available """)
-                     
-                    
+            
+            with st.container():         
+                # Code Block for Aditional references
+                focus_area_from_noun_chunks = get_noun_chunks(clean_text_str)
+                st.info('Additional Info')
+                
+                if len(focus_area_from_noun_chunks) > 0 :
+                    for addtnl_tag in focus_area_from_noun_chunks:
+                        st.markdown(f""" * ###### {addtnl_tag.capitalize()}""")
+                else:
+                    st.markdown(f""" Not Available """)    
                 
                 
                 

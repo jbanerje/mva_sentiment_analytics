@@ -4369,6 +4369,7 @@ unaccustomed
 unachievable
 unaffordable
 unappealing
+unapologetic
 unattractive
 unauthentic
 unavailable
@@ -4782,3 +4783,5 @@ zealot
 zealous
 zealously
 zombie
+patronize
+patronizing 
