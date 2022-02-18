@@ -53,86 +53,61 @@ def load_sentiment_analysis_ui():
     # Real Time Search Box
     with st.form(key='emotion_clf_form'):
         
-        st.header('Analyze Your Sentence')
+        st.header('Analyze Customer Review')
         
         # Grab Raw Text
         raw_text            = st.text_area("")
         submit_text         = st.form_submit_button(label='Submit')
-        
+    
+
     if submit_text:
         
-        # Show Spacy Vizualizer
-        display_name_entity_viz(raw_text)
-                            
-        # Build 2 sections in the UI
-        col1,col2  = st.columns(2)
+        with st.container():
+            # Show Spacy Vizualizer
+            display_name_entity_viz(raw_text)
         
-        # Pre-Process Text - Remove unwanted chacaracters, stem, lemmatize etc
-        pre_processed_text      = DataPreProcess(raw_text)
-        clean_text_list         = pre_processed_text.perform_data_pre_processing()
-        clean_text_str          = ' '.join(clean_text_list)
+        with st.container():
+            
+            # ''' Container for the Pie Charts '''
+            
+            # st.markdown('---')
+                                        
+            # Build 2 sections in the UI
+            col1,col2  = st.columns(2)
         
-        # Get Sentiments
-        sentiment_polarity      = analyzeSentiments(raw_text)       
+            # Pre-Process Text - Remove unwanted chacaracters, stem, lemmatize etc
+            pre_processed_text      = DataPreProcess(raw_text)
+            clean_text_list         = pre_processed_text.perform_data_pre_processing()
+            clean_text_str          = ' '.join(clean_text_list)
+            
+            # Get Sentiments
+            sentiment_polarity      = analyzeSentiments(raw_text)       
+            
+            # Get Emotions
+            emotions_info           = Emotions(raw_text)
         
-        # Get Emotions
-        emotions_info           = Emotions(raw_text)
-        
-        with col1:
+            with col1:
             
-            # Polarity Extractions
-            polarity_info       = sentiment_polarity.get_sentiment_polarity()
-            polarity_df         = sentiment_polarity.get_sentiment_data()
-            
-            st.info(f'Sentiment - {polarity_info}')
-            
-            if polarity_info  == 'Negative':
-                polarity_word_list = read_neg_word_dict(clean_text_list)
-            else:
-                polarity_word_list = read_pos_word_dict(clean_text_list)
-                    
-            st.pyplot(sentiment_pie_chart(list(polarity_df['Score']), list(polarity_df['Sentiment'].unique())))
-            
-            # Code Block For Entity Information
-            entity_information  = pos_tagging(raw_text)
-            entity_information = [entity.capitalize() for entity in entity_information]
-            
-            st.info('Entity Information')
-            
-            if len(entity_information) > 0 :
-                entity_information_str = ' '.join(entity_information)
-                st.markdown(f""" ###### {entity_information_str}""")
-            else:
-                st.markdown(f""" Not Available """)
-            
-            # Code Block For Customer Feedback
-            st.info('Customer Feedback')
-            
-            if len(polarity_word_list) > 0 :
-                for pol_word in polarity_word_list:
-                    st.markdown(f""" * ###### {pol_word.capitalize()}""")
-            else:
-                st.write(f""" Not Available """)
+                # Code block for Polarity Extractions
+                polarity_info       = sentiment_polarity.get_sentiment_polarity()
+                polarity_df         = sentiment_polarity.get_sentiment_data()
                 
+                st.info(f'Sentiment - {polarity_info}')
                 
-        with col2 :
+                if polarity_info  == 'Negative':
+                    polarity_word_list = read_neg_word_dict(clean_text_list)
+                else:
+                    polarity_word_list = read_pos_word_dict(clean_text_list)
+                        
+                st.pyplot(sentiment_pie_chart(list(polarity_df['Score']), list(polarity_df['Sentiment'].unique())))
             
-            # Code Block For Entity information
-            labels, sizes = extract_key_values_from_dict(emotions_info.extract_emotions())
-            st.info('Emotions')
-            st.pyplot(sentiment_pie_chart(sizes, labels))
+            with col2 :
             
-            # Code Block For Focus Area
-            focus_area_from_static      = identify_focus_areas(clean_text_list)
-            
-            st.info('Focus Area')
-            
-            if len(focus_area_from_static) > 0 :
-                for focus_word in focus_area_from_static:
-                    st.markdown(f""" * ###### {focus_word.capitalize()}""")
-            else:
-                st.markdown(f""" Not Available """)
-            
+                # Code Block For Entity information
+                labels, sizes = extract_key_values_from_dict(emotions_info.extract_emotions())
+                st.info('Emotions')
+                st.pyplot(sentiment_pie_chart(sizes, labels))
+
             # # Code Block for Aditional references
             # focus_area_from_noun_chunks = get_noun_chunks(clean_text_str)
             # st.info('Additional Tags')
@@ -142,6 +117,55 @@ def load_sentiment_analysis_ui():
             #         st.markdown(f""" - {addtnl_tag.capitalize()}""")
             # else:
             #     st.markdown(f""" Not Available """)
-        
+            
+            with st.container():
+                
+                # ''' Container for the Feedback components '''
+                                                        
+                col1, col2, col3  = st.columns(3)
+                
+                with col1 :
+                    
+                    # Code Block For Entity Information
+                    entity_information  = pos_tagging(raw_text)
+                    entity_information = [entity.capitalize() for entity in entity_information]
+            
+                    st.info('Entity Information')
+                    
+                    if len(entity_information) > 0 :
+                        entity_information_str = ' '.join(entity_information)
+                        st.markdown(f""" ###### {entity_information_str}""")
+                    else:
+                        st.markdown(f""" Not Available """)
+                 
+                with col2 :
+                    
+                    # Code Block For Focus Area
+                    focus_area_from_static      = identify_focus_areas(clean_text_list)
+                    
+                    st.info('Focus Area')
+                    
+                    if len(focus_area_from_static) > 0 :
+                        for focus_word in focus_area_from_static:
+                            st.markdown(f""" * ###### {focus_word.capitalize()}""")
+                    else:
+                        st.markdown(f""" Not Available """)
+                 
+                with col3 :
+                    # Code Block For Customer Feedback
+                    st.info('Review Feedback')
+                    
+                    if len(polarity_word_list) > 0 :
+                        for pol_word in polarity_word_list:
+                            st.markdown(f""" * ###### {pol_word.capitalize()}""")
+                    else:
+                        st.write(f""" Not Available """)
+                     
+                    
+                
+                
+                
+                
+                
 if __name__ == "__main__":
     load_sentiment_analysis_ui()

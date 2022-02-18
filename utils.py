@@ -15,8 +15,7 @@ def identify_focus_areas(pre_processed_text):
         if word in car_parts_list:
             problem_area_list.append(word)
         
-    if len(problem_area_list) > 0 :
-        return list(set(problem_area_list))
+    if len(problem_area_list) > 0 :        return list(set(problem_area_list))
     else:
         return ''
 
@@ -26,7 +25,7 @@ def read_neg_word_dict(pre_processed_text):
     
     file_neg_lex = open("./static/negative-words.txt", "r")
     neg_lex_list = file_neg_lex.read().split()
-        
+            
     neg_feedback_words = [neg_word for neg_word in pre_processed_text if neg_word in neg_lex_list]
         
     if len(neg_feedback_words) > 0 :
@@ -98,7 +97,8 @@ def display_name_entity_viz(text):
     # visualize_ner(doc, labels=nlp.get_pipe("ner").labels)
     visualize_ner(
                 doc, 
-                labels=['PERSON', 'DATE', 'GPE', 'ORG', 'EVENT', 'FAC', 'LOC', 'PRODUCT'], 
+                labels=nlp.get_pipe("ner").labels,
+                # labels=['PERSON', 'DATE', 'GPE', 'ORG', 'EVENT', 'FAC', 'LOC', 'PRODUCT'], 
                 show_table=False,
                 title="Keyword Vizualization"
             )
