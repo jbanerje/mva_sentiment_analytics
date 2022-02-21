@@ -1,5 +1,6 @@
 # Core Pkgs
 import streamlit as st
+from collections import Counter
 
 # EDA Pkgs
 import pandas as pd 
@@ -9,6 +10,7 @@ from datetime import datetime
 # Vizualization Package 
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, ImageColorGenerator, STOPWORDS
+from PIL import Image
 
 # In-built Class
 from get_sentiments import *
@@ -44,7 +46,7 @@ def sentiment_pie_chart(sizes, labels):
            
 def load_sentiment_analysis_ui():
     
-    st.set_option('deprecation.showPyplotGlobalUse', False)
+    # st.set_option('deprecation.showPyplotGlobalUse', False)
     
     # Page Setup
     st.set_page_config(
@@ -53,6 +55,26 @@ def load_sentiment_analysis_ui():
     layout="centered",
     initial_sidebar_state="auto")
     
+    # Hide Footer Setup
+    hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+    # CSS to inject contained in a string
+    hide_table_row_index = """
+                <style>
+                tbody th {display:none}
+                .blank {display:none}
+                </style>
+                """
+
+    # Inject CSS with Markdown
+    st.markdown(hide_table_row_index, unsafe_allow_html=True)
+
     # Real Time Search Box
     with st.form(key='emotion_clf_form'):
         
@@ -64,7 +86,7 @@ def load_sentiment_analysis_ui():
     
 
     if submit_text:
-        
+
         with st.container():
             # Show Spacy Vizualizer
             display_name_entity_viz(raw_text)
@@ -80,7 +102,7 @@ def load_sentiment_analysis_ui():
         
             # Pre-Process Text - Remove unwanted chacaracters, stem, lemmatize etc
             pre_processed_text      = DataPreProcess(raw_text)
-            actual_text, clean_text_list         = pre_processed_text.perform_data_pre_processing()
+            actual_text, counter_text, clean_text_list = pre_processed_text.perform_data_pre_processing()
             clean_text_str          = ' '.join(clean_text_list)
             
             # Get Sentiments
@@ -88,7 +110,7 @@ def load_sentiment_analysis_ui():
             
             # Get Emotions
             emotions_info           = Emotions(raw_text)
-        
+
             with col1:
             
                 # Code block for Polarity Extractions
@@ -154,27 +176,52 @@ def load_sentiment_analysis_ui():
                     else:
                         st.write(f""" Not Available """)
             
-            with st.container():         
-                # Code Block for Aditional references
-                focus_area_from_noun_chunks = get_noun_chunks(actual_text)
-                st.sidebar.info('Additional Info')
-                if len(focus_area_from_noun_chunks) > 0 :
-                    for addtnl_tag in focus_area_from_noun_chunks:
-                        if len(addtnl_tag.split()) > 1:
-                            st.sidebar.markdown(f""" * ###### {addtnl_tag.capitalize()}""")
-                else:
-                    st.markdown(f""" Not Available """)    
+            # with st.container():         
+            #     # Code Block for Aditional references
+            #     focus_area_from_noun_chunks = get_noun_chunks(actual_text)
+            #     st.sidebar.info('Additional Info')
+            #     if len(focus_area_from_noun_chunks) > 0 :
+            #         for addtnl_tag in focus_area_from_noun_chunks:
+            #             if len(addtnl_tag.split()) > 1:
+            #                 st.sidebar.markdown(f""" * ###### {addtnl_tag.capitalize()}""")
+            #     else:
+            #         st.markdown(f""" Not Available """)    
                 
             with st.container():
-                    
+                st.info('Word Cloud')    
                 # Create and generate a word cloud image:
-                wordcloud = WordCloud(background_color="white").generate(clean_text_str)
+                # mask = np.array(Image.open('./images/porsche-model.png'))
+                # mask_colors = ImageColorGenerator(mask)
+                wordcloud = WordCloud(
+                                        background_color="white", 
+                                        # mask = mask,
+                                        max_words = 15, 
+                                        max_font_size = 256,
+                                        # width = mask.shape[1],
+                                        # height = mask.shape[0], 
+                                        # color_func = mask_colors,    
+                                        # random_state = 42,
+                                        # contour_width=1, 
+                                        # contour_color='red',
+                                        # collocations = False
+                                    )
+                wordcloud.generate(clean_text_str)
                 
                 # Display the generated image:
-                plt.imshow(wordcloud, interpolation='bilinear')
-                st.pyplot()
+                fig, ax = plt.subplots(figsize = (10, 8))
+                ax.imshow(wordcloud, cmap=plt.cm.gray, interpolation='bilinear')
+                plt.axis('off')
+                st.pyplot(fig)
+            
+            with st.container():
                 
-                
+                # Block for word count
+                word_count_dict = dict(Counter(counter_text))
+                word_count_df = create_word_frequency(word_count_dict)
+
+                # Print Dataframe
+                st.sidebar.info('Word Frequency')
+                st.sidebar.table(word_count_df)
                 
 if __name__ == "__main__":
     load_sentiment_analysis_ui()

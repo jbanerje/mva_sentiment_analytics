@@ -26,6 +26,8 @@ class DataPreProcess:
         
         word_list_lemmatized = [word.lemma_ for word in nlp(text) if not (word.like_num or word.is_stop or word.is_punct or word.is_space or len(word)==1)]
         
+        word_list_for_count  = [word.lemma_ for word in nlp(text) if not (word.like_num or word.is_stop or word.is_punct or word.is_space or len(word)==1)]
+        
         # word_list = text.split()
         
         # # Word List after removing stop words
@@ -36,4 +38,4 @@ class DataPreProcess:
         # doc = nlp(sentence_after_cleaning)
         # word_list_lemmatized = [token.lemma_ for token in doc]
         
-        return text, list(set(word_list_lemmatized))
+        return text, word_list_for_count, list(set(word_list_lemmatized))

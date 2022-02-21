@@ -1,17 +1,15 @@
-# streamlit_app.py
-import spacy_streamlit
-from spacy_streamlit import visualize_parser, visualize_ner
-import spacy 
+# from collections import Counter
+# my_str = "I own a Cayenne S 2019. My battery went dead, after 10 days at the dealership, my car still has not been fixed. Porsche doesn't have a battery for this car available in the USA. Cannot believe this. It is my third Porsche in three years. It will be my last one. How is possible that a company like Porsche do not has batteries in this inventory in the USA. Very dissatisfaction for the customer service as well. Really bad."
+# myList = my_str.split()
+# print (dict(Counter(myList)))
+import pandas as pd
 
-# models = ["en_core_web_sm", "en_core_web_md"]
-default_text = "Google was founded in September 1998 by Larry Page and Sergey Brin while they were Ph.D. students at Stanford University in California. Together they own about 14 percent of its shares and control 56 percent of the stockholder voting power through supervoting stock. They incorporated Google as a California privately held company on September 4, 1998, in California. Google was then reincorporated in Delaware on October 22, 2002."
-# spacy_streamlit.visualize(models, default_text)
-nlp = spacy.load("en_core_web_sm")
-doc = nlp(default_text)
-visualize_ner(
-                doc, 
-                labels=["PERSON", "DATE", "GPE"], 
-                show_table=False,
-                title="Persons, dates and locations"
-            )
-visualize_tokens(doc, attrs=["text", "pos_", "dep_", "ent_type_"])
+my_dict = {'cayenne': 1, 'battery': 3, 'go': 1, 'dead': 1, 'day': 1, 'dealership': 1, 'car': 2, 'fix': 1, 'porsche': 3, 'not': 1, 'available': 1, 'usa': 2, 'believe': 1, 'year': 1, 'possible': 1, 'company': 1, 'like': 1, 'inventory': 1, 'dissatisfaction': 1, 'customer': 1, 'service': 1, 'bad': 1}
+
+df = pd.DataFrame({
+                    'Word':list(my_dict.keys()), 
+                    'Frequency':list(my_dict.values())
+                })
+df = df.sort_values(by='Frequency', ascending=False).head(10)
+print(df)
+

@@ -2,6 +2,7 @@ import spacy
 nlp = spacy.load("en_core_web_md")
 from spacy_streamlit import visualize_ner, visualize_tokens, visualize_textcat
 # https://github.com/explosion/spacy-streamlit
+import pandas as pd
 
 def identify_focus_areas(pre_processed_text):
     
@@ -103,3 +104,16 @@ def display_name_entity_viz(text):
             )
     
     return
+
+def create_word_frequency(word_dict):
+
+    ''' Function to return a dataframe from dictionary '''
+
+    df = pd.DataFrame({
+                    'Word':list(word_dict.keys()), 
+                    'Frequency':list(word_dict.values())
+                })
+
+    df = df.sort_values(by='Frequency', ascending=False).head(10)
+
+    return df
