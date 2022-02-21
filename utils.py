@@ -1,5 +1,5 @@
 import spacy
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load("en_core_web_md")
 from spacy_streamlit import visualize_ner, visualize_tokens, visualize_textcat
 # https://github.com/explosion/spacy-streamlit
 
@@ -93,13 +93,12 @@ def get_noun_chunks(text):
 
 def display_name_entity_viz(text):
     doc = nlp(text)
-    # print(nlp.get_pipe("ner").labels)
-    # visualize_ner(doc, labels=nlp.get_pipe("ner").labels)
+    
     visualize_ner(
                 doc, 
                 labels=nlp.get_pipe("ner").labels,
                 # labels=['PERSON', 'DATE', 'GPE', 'ORG', 'EVENT', 'FAC', 'LOC', 'PRODUCT'], 
-                show_table=False,
+                show_table=True,
                 title="Keyword Vizualization"
             )
     

@@ -8,6 +8,7 @@ from datetime import datetime
 
 # Vizualization Package 
 import matplotlib.pyplot as plt
+from wordcloud import WordCloud, ImageColorGenerator, STOPWORDS
 
 # In-built Class
 from get_sentiments import *
@@ -43,6 +44,8 @@ def sentiment_pie_chart(sizes, labels):
            
 def load_sentiment_analysis_ui():
     
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    
     # Page Setup
     st.set_page_config(
     page_title="CUSTOMER SENTIMENT ANALYSIS",
@@ -77,7 +80,7 @@ def load_sentiment_analysis_ui():
         
             # Pre-Process Text - Remove unwanted chacaracters, stem, lemmatize etc
             pre_processed_text      = DataPreProcess(raw_text)
-            clean_text_list         = pre_processed_text.perform_data_pre_processing()
+            actual_text, clean_text_list         = pre_processed_text.perform_data_pre_processing()
             clean_text_str          = ' '.join(clean_text_list)
             
             # Get Sentiments
@@ -153,16 +156,23 @@ def load_sentiment_analysis_ui():
             
             with st.container():         
                 # Code Block for Aditional references
-                focus_area_from_noun_chunks = get_noun_chunks(clean_text_str)
-                st.info('Additional Info')
-                
+                focus_area_from_noun_chunks = get_noun_chunks(actual_text)
+                st.sidebar.info('Additional Info')
                 if len(focus_area_from_noun_chunks) > 0 :
                     for addtnl_tag in focus_area_from_noun_chunks:
-                        st.markdown(f""" * ###### {addtnl_tag.capitalize()}""")
+                        if len(addtnl_tag.split()) > 1:
+                            st.sidebar.markdown(f""" * ###### {addtnl_tag.capitalize()}""")
                 else:
                     st.markdown(f""" Not Available """)    
                 
+            with st.container():
+                    
+                # Create and generate a word cloud image:
+                wordcloud = WordCloud(background_color="white").generate(clean_text_str)
                 
+                # Display the generated image:
+                plt.imshow(wordcloud, interpolation='bilinear')
+                st.pyplot()
                 
                 
                 

@@ -3,7 +3,7 @@ a/c
 ac
 air conditioner
 battery
-brakes
+brake
 bumper
 trip meter
 catalytic converter
@@ -52,4 +52,6 @@ repair
 repairs
 oil
 chip
-chips
+noise
+chassis
+suspension
